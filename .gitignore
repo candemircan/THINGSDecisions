@@ -1,0 +1,7 @@
+.vscode
+.ipynb_checkpoints
+.Rhistory
+.DS_Store
+.Rproj.user
+stimuli/*
+!stimuli/.gitkeep
