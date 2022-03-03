@@ -1,0 +1,7 @@
+"","effect","group","term","estimate","std.error","statistic","p.value"
+"1","fixed",NA,"RewardDiffRightLeft",1.69479728596393,0.163979144297462,10.3354441397104,4.87150147331479e-25
+"2","fixed",NA,"trial_n",-0.0175530247676535,0.0464280117576115,-0.378069706264685,0.705378811920345
+"3","fixed",NA,"RewardDiffRightLeft:trial_n",0.486644982845823,0.0532144423388454,9.14497947281096,5.96411893875647e-20
+"4","ran_pars","participant_n","sd__RewardDiffRightLeft",0.757371225951779,NA,NA,NA
+"5","ran_pars","participant_n","cor__RewardDiffRightLeft.trial_n",0.353300818613494,NA,NA,NA
+"6","ran_pars","participant_n","sd__trial_n",0.107139344273219,NA,NA,NA
