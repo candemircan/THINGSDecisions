@@ -1,0 +1,222 @@
+%lets go
+\documentclass[10pt]{article}
+\usepackage{dirtytalk}
+\usepackage{cogsci}
+\usepackage{pslatex}
+\usepackage{float}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[nodoi]{apacite}
+\usepackage{amsmath, amssymb}
+\usepackage{caption}
+\usepackage[bottom]{footmisc}
+\usepackage[font=footnotesize,skip=2pt]{caption}
+\usepackage[hyphens,spaces,obeyspaces]{url}
+\usepackage{natbib}
+\renewcommand\bibliographytypesize{\small}
+
+
+\cogscifinalcopy  
+
+\title{Decision-Making with Naturalistic Options\vspace{-0.4cm}}
+
+\author{{\large \bf Can Demircan$^{1}$ (can.demircan@tuebingen.mpg.de), Leonardo Pettini$^{2,3}$, Tankred Saanum$^{1}$,} \\ {{\large \bf Marcel Binz$^{1}$, Blazej M Baczkowski$^{2,4}$, Christian F Doeller$^{2,5,6}$, Mona Garvert$^{2}$, \& \large \bf Eric Schulz$^1$}}
+\\
+$^1$Max Planck Institute for Biological Cybernetics, Tübingen, Germany 
+\\
+$^2$Max Planck Institute for Human Cognitive and Brain Sciences, Leipzig, Germany 
+\\
+$^3$Charité–Universitätsmedizin Berlin, Berlin, Germany
+\\
+$^4$Department of Cognitive Psychology, Institute of Psychology, Universität Hamburg, Hamburg, Germany
+\\
+$^5$Kavli Institute for Systems Neuroscience, Centre for Neural Computation, 
+\\
+The Egil and Pauline Braathen and Fred Kavli Centre for Cortical Microcircuits, \\
+Jebsen Centre for Alzheimer’s Disease, Norwegian University of Science and Technology, Trondheim, Norway
+\\
+$^6$Institute of Psychology - Wilhelm Wundt, Leipzig University, Leipzig, Germany
+}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+How do humans generalise to make better decisions? Previous work has investigated this question using reward-guided decision-making tasks with low-dimensional and artificial stimuli. In this paper, we extend this work by presenting participants with a naturalistic decision-making task, in which options were images of real-world objects and the underlying reward function was based on one of their latent dimensions. Even though participants received no explicit instruction about object features, they quickly learned to do the task and generalised to unseen objects. To understand how they accomplished this, we tested a range of computational models and found that human behaviour is overall best explained by a linear model but that participants' strategies changed during the experiment. Lastly, we showed that combining pixel-based representations extracted from convolutional neural networks with the original latent dimensions further improved our models. Taken together, our study offers new insights into human decision making under naturalistic settings.
+    
+\textbf{Keywords:} 
+naturalistic decision-making; generalisation; heuristics; reinforcement learning
+\end{abstract}
+
+\section{Introduction}
+
+Imagine that you have tried and enjoyed a specific brand of chocolate, but the next time you go to the store you cannot find the same brand anymore. Generalising what you like about that specific chocolate to pick another option that you would enjoy is trivial. Early theories have characterized the process of learning as forming stimulus-reward associations \citep{rescorla_theory_1972}. However, if you were only forming such associations, you would not be able to find a good alternative in the example above. 
+
+How do people accomplish this seemingly complex challenge? The study of human generalisation has been a central theme in many areas of cognitive science \citep{shepard_generalisation}, such as associative learning \citep{shanks1998feature}, function learning \citep{schulz2017compositional}, and decision-making \citep{stojic_human_2015, schulz_finding_2020, saanum2021compositional,garvert_hippocampal_2021}. Together, these studies illustrate that humans rely on feature-based representations to make generalisations in situations like the chocolate example above. Previous research suggests that these generalisation capabilities are explained by various computational models, including rule- and similarity-based theories \citep{shanks1998feature, lucas2015rational}.
+
+While these studies have been important for understanding how humans generalise, they also have important shortcomings. First, the stimuli used in these studies typically have only a few underlying dimensions. This does not reflect the high-dimensional features of the objects we deal with in real life, which makes it unclear whether the proposed theories of learning can scale up to real-world environments. In addition, features of stimuli are often explicitly provided and clearly separable from each other. In real life, this is not the case and an object can be arbitrarily broken down into different sets of features. For example, you can represent a bar of chocolate by how sweet it is, its price, its environmental impact, any combination thereof, or with completely different features.
+
+To address these shortcomings, we conducted a two-alternative forced-choice study, in which stimuli were unique images of real-world objects from the THINGS database \citep{hebart_things_2019}. The underlying reward function was determined by one of the latent features of these objects, which were extracted using a combination of computational modeling and human behavioural data by Hebart and colleagues (2020). With this design, we address the following questions: 
+\begin{enumerate} 
+	\item Do people make successful generalisations about rewards in high-dimensional feature spaces?
+	\item Do insights from previously conducted studies with low-dimensional, artificial stimuli transfer to more naturalistic domains?
+	\item What kind of representations do people use to solve naturalistic decision-making tasks?
+\end{enumerate}
+
+\begin{figure*}[th]
+\centering
+\resizebox{\textwidth}{!}{\input{figures/figure1.pgf}}
+\caption{Design \& Behavioural Analyses. \textbf{A)} An example of a trial outcome. The bike pedal, which is highly rewarding because it is mostly metallic/artificial, is chosen over the grapes. \textbf{B)} Participant performance over trials. Regret is computed as the difference between the most rewarding option and the option picked by the participant. The shaded black line represents the mean and its standard error, and the pink lines show individual participants' learning curves. \textbf{C)} Probability of choosing the option on the left for different reward differences between the two options with standard error bars. \textbf{D)} Standardised coefficients with standard error bars from a mixed-effects logistic regression model predicting participant choice as a function of trial number and reward differences between the two options. \vspace{-0.5cm}}
+\label{fig:Figure1}
+\end{figure*}
+
+We find that people discover the underlying relationship within a few dozen trials. To gain insights into their decision-making processes, we carried out several model-based analyses. We first compared participant behaviour to various models of decision-making, including a linear model, a Gaussian Processes regression model, and two heuristic decision-making strategies. This analysis revealed that while the linear model explained participant behaviour best overall, people seemed to change their strategies as they progressed through the task. We then probed which feature-based representations our participants utilised. We found that while performance was best explained by the originally extracted latent features, it could be further improved by using additional pixel-based representations extracted from a pre-trained convolutional neural network. Taken together, our results provide an initial step towards understanding human decision-making in naturalistic domains.
+
+
+\section{Methods}
+
+\subsection{Participants}
+We recruited 25 participants (7 female, $M_{\text{age}} = 24.55$, $SD_{\text{age}} = 3.86$) through Prolific. All participants had a Prolific Score of 89 or above. Participants were given 7€ per hour as a base rate, and a bonus of up to 10€ was offered depending on their performance. Participants took 15 minutes to complete the task on average. 
+
+\subsection{Design}
+Participants were asked to complete a two-alternative forced-choice task with $150$ consecutive trials. At the beginning of the experiment, they were instructed that each image was associated with a reward in a non-random way, and they were asked to choose the images that gave the most rewards.
+
+In each trial, participants were presented with a fixation cross (for $500$ ms), followed by a pair of images. They had unlimited time to choose one of the two images by using the left and right arrow buttons on the keyboard. They were then shown the reward associated for both the chosen and the unchosen option, in green and white respectively (for $2000$ ms). The order of trials was randomised across participants.
+
+\subsection{Stimuli \& Reward Function}
+
+$300$ images were sampled from the THINGS database, which is a systematically curated image dataset of real-world objects \citep{hebart_things_2019}. Hebart and colleagues also trained an image embedding model on similarity judgements of humans on the THINGS database in order to extract latent dimensions with continuous loadings that capture participants' mental representations of these objects \citep{hebart_revealing_2020}. They extracted $49$ latent dimensions, which were validated to be semantically meaningful by further behavioural testing. These latent dimensions include, for example, how metallic, food-related, or colourful an object is (see the original paper for the entire list of latent dimensions).
+
+We normalised the loadings of the first latent dimension, which describes how metallic/artificial an object is, to compute the reward function as follows: $$ r_n = \dfrac{w_n - \min(\mathbf{w})}{\max(\mathbf{w}) - \min (\mathbf{w})} \times 100 $$ where $r_n$ is the reward for stimulus $n$ and $\mathbf{w} = [w_1, \ldots, w_{N} ]$ is the vector of first dimension loadings for the sampled stimuli. Crucially, the existence of these latent dimensions was unknown to the participants. An example trial from our experiment is displayed in Figure \ref{fig:Figure1}A.
+
+
+\section{Behavioural Analyses}
+
+\begin{figure*}[th]
+\centering
+\resizebox{\textwidth}{!}{\input{figures/figure2.pgf}}
+\caption{Model-Based Analyses. \textbf{A)} Model fits for mixed-effects models predicting participant choice with loadings in different latent dimensions. Red dashed line shows chance level performance. \textbf{B)} Model comparison of computational models for all trials. Frequencies plotted with standard error bars. \textbf{C)} Model comparison of computational models for the beginning (1-50), the middle (51-100), and the ending (101-150) trials. \textbf{D)} Performance of computational models, where models follow a greedy policy. \vspace{-0.5cm}}
+\label{fig:Figure2}
+\end{figure*}
+
+
+We computed several descriptive statistics to analyse human behaviour on our task. Participants learned to select the higher rewarding options over a few dozen trials. Figure \ref{fig:Figure1}B shows that the cumulative mean regret, the average of the difference between the best option and the chosen option, decreased over trials. We also show participant choices as a function of the reward difference between the left and right options in Figure \ref{fig:Figure1}C. The function takes a sigmoid shape, indicating participants can use the reward differences between the options to guide their decisions, i.e. choosing the left option more frequently as its comparative advantage increased.
+
+To formally test whether participants could learn the task, we used a mixed-effects logistic regression model. We predicted participant choice in each trial as a function of the reward difference between the two options and the trial number. Both predictors were included as fixed and random effects. A greater reward difference between the left and the right options led participants to choose the right option more frequently ($\hat{\beta} = 1.69$, $95 \% \text{ CI} \:[1.37, \: 2.01]$, $p < .001$). While the trial number had no significant effect on participant choice ($\hat{\beta} = - 0.02$, $95 \% \text{ CI} \:[-.07, \: .11]$, $p = .71$), there was an interaction effect between trial number and the reward difference ($\hat{\beta} = .49$, $95 \% \text{ CI} \:[.39, \: .59]$, $p < .001$), indicating that participants got better over time at using reward differences between the options (see Figure \ref{fig:Figure1}D).
+
+
+\section{Model-Based Analyses}
+
+
+
+Our previous analyses confirmed that participants can solve our task and that they improve over time. We complement these behavioural results with additional model-based analyses to gain insights into how they accomplished this. 
+
+\subsection{Which feature predicts behaviour the best?}
+
+We started by testing which of the latent dimensions predicted participant choice behaviour the best. To do so, we ran $49$ mixed-effects logistic regression models, one for each latent dimension. Each model had differences of a given dimension's loadings between the left and the right options both as fixed and random effects. As can be seen in Figure \ref{fig:Figure2}A, the model that used the first latent dimension, which is the one the reward function was based on, was the best performing model (negative log-likelihood $= 1940.24$). The same figure also shows that there were other latent dimensions, such as tool or construction relatedness, that predicted participant behaviour above chance level. The above-chance performance of these models can be explained by the fact that these dimensions were correlated with how metallic/artificial an object is. 
+
+\subsection{Computational Models}
+
+
+To provide a computational account for how participants learned to do our task, we assessed the degree to which their choice behaviour was described by different decision-making models. All models presented in this section use the latent dimensions identified by \citet{hebart_revealing_2020} as features and are updated after each trial using data from both the chosen and the unchosen option. All hyperparameters of all the computational models were fit in order to maximise task performance.
+
+The first model under consideration is a \emph{linear model}, which assumes that rewards are a weighted linear combination of all features: 
+\begin{equation*}
+\textbf{r} = \textbf{X}\beta + \epsilon \qquad\qquad \epsilon \sim \mathcal{N}(0, \sigma^2)    
+\end{equation*}
+where the rows of $\textbf{X}$ are trials and the columns are different features, $\beta$ are the weights, $\textbf{r}$ is the reward, and $\epsilon$ is the noise term. Previously, this class of models has provided good fits in decision-making tasks, both when the reward function was a linear function of single \citep{niv_reinforcement_2015} and multiple features \citep{speekenbrink_learning_2010,stojic_human_2015}. In our case, it was implemented as a Bayesian linear regression model \citep{bishop2006}. The prior over the weights was defined as a spherical Gaussian distribution scaled by $\lambda$. The reward prediction for a new stimulus $\mathbf{x}$ was obtained using the mean of the posterior predictive distribution: 
+\begin{align*}
+\hat{r}(\mathbf{x}) &= \left(\sigma^{-2}\left(\sigma^{-2}\textbf{X}^{T}\textbf{X} + \lambda\mathbf{I}\right)^{-1}\textbf{X}^T\textbf{r}\right)^T \mathbf{x}\end{align*}
+
+\emph{Gaussian Process} (GP) regression models \citep{schulz_tutorial_2018} offer a competing explanation for how people could solve our task. In previous work, these models have been successfully used to understand human generalisation across a range of reward-guided decision-making studies \citep{schulz_finding_2020}. A GP defines a multivariate normal probability distribution over functions: $$f \sim \mathcal{N}(m(\textbf{x}),k(\textbf{x},\textbf{x}^{\prime}))$$ where $m(\textbf{x})$ is the mean function, which we set to 0, and $k(\textbf{x},\textbf{x}^{\prime})$ is the kernel (also called the covariance function), which defines prior assumptions about how similar two feature vectors $\textbf{x}$ and $\textbf{x}'$ are. Here, we employ a Radial Basis Function (RBF) kernel, which represents the similarity between two feature vectors as an exponentially decaying function of their squared Euclidean distance: $$k(\textbf{x},\textbf{x}^{\prime}) = \exp \left( \dfrac{\lVert \textbf{x} - \textbf{x}^{\prime} \rVert^2}{2\ell^2} \right)$$ where the parameter $\ell$ controls the rate of decay of similarity. We picked the RBF kernel as it has previously been shown to explain human behaviour in decision-making tasks with linear reward functions \citep{stojic_its_2020}, despite it not capturing the underlying linear task structure. Using GP regression, reward predictions for a new stimulus $\mathbf{x}$ can be made by: $$\hat{r}(\textbf{x}) = \textbf{k}^T\left(\textbf{K} + \sigma^2\textbf{I}\right)^{-1} \textbf{r}$$ where \textbf{k} is the covariance matrix between the previously observed stimuli and the new stimulus and \textbf{K} is the covariance matrix between all previously observed stimuli.
+
+
+The two previously outlined models take all features into account to varying degrees when making predictions. It has been argued that this style of decision-making is too computationally expensive and people rely on simpler heuristic strategies instead \citep{gigerenzer_heuristic_2011}. We therefore also considered two common heuristics in our model comparison: a \emph{single cue} model and an \emph{equal weighting} model. The single cue model only uses the single best feature to make decisions. This type of heuristic has been shown to be successful at explaining human behaviour both in real-world and lab settings \citep{gigerenzer_betting_1999,gigerenzer_heuristic_2011}. We assume that the identity of the best feature is unknown, and maintain one single cue model for each feature dimension. Each of these models is implemented as a simple Bayesian linear regression model. To obtain reward estimates, we make predictions based only on the best performing model up until that point, i.e., the one with the highest likelihood \citep{binz_heuristics_2022}. The equal weighting model, on the other hand, does not distinguish between different features and learns a single weight for all of them \citep{gigerenzer_heuristic_2011,dawes_linear_1974}. We implemented this form of  decision-making as a Bayesian linear regression model with a single feature that is obtained by summing up the original features \citep{binz_heuristics_2022}.
+
+
+\subsection{Model Comparison}
+
+For our model comparison, we computed the reward estimates for each computational model as described above. We then ran a separate mixed-effects logistic regression for each model, where we used the difference between the reward estimates of two options as fixed and random regressors to predict participant choices. We did a leave-one-out cross-validation for each of these models to obtain cross-validated log-likelihoods \citep{garvert_hippocampal_2021}. To compare models, we used these log-likelihoods in a model-frequency analysis \citep{stephan_bayesian_2009,rigoux_bayesian_2014}, which is a Bayesian procedure that estimates the prevalence of a model within the participant population. We report model frequencies (MF), which measure how common a model is in that population, and their exceedance probability (XP), which is the posterior probability that the frequency of a given model is larger than all the other models in that population. We additionally report pseudo-$R^2$ scores \citep{mcfadden_conditional_1974} obtained from the  cross-validated log-likelihoods:
+\begin{equation*}
+    R^2 = 1 -\dfrac{\mathcal{L}(M)}{\mathcal{L}(\text{Random})}
+\end{equation*}
+$\mathcal{L}(M)$ is the log-likelihood of a given model and $\mathcal{L}(\text{Random})$ is the log-likelihood of a random model. While $R^2 = 1$ shows $M$ is infinitely more accurate than chance, $R^2 = 0$ indicates it is a model performing at chance-level.
+
+We found that the linear model is the most frequent model within our population (MF $= .87$, XP $>.99, \: R^2=.2792$) as illustrated in Figure \ref{fig:Figure2}B. While much less frequent, the GP explained participant behaviour to a similar degree (MF $= .11$, $R^2=.2786$). While similar $R^2$ values of the two models indicate that they predict the overall choice behaviour to similar extent, differing MF values indicate that the linear model is considerably better at explaining individual participants' behaviour. The single cue and equal weighting models performed poorly in predicting participant behaviour ($R^2 = .03, \: .005 \: $ respectively).
+
+
+We also hypothesised that people might rely on different strategies in different stages of the task. To test this, we ran separate model frequency analyses for different parts of the study (Figure \ref{fig:Figure2}C). While the linear model outperforms the other models in the first $50$ trials (MF $= .97$, XP$>.99, \: R^2 = .18$), the single cue model was the most frequent model (MF $= .58$, XP $=.97, \: R^2=.32$) for the second $50$ trials. Interestingly, in the last $50$ trials, the GP was the most frequent model (MF $= .52$, XP $=.91, \: R^2=.36$). These results indicate that participants switch strategies as they progress through the task. They start the task with a linear-additive strategy, then switch to make decisions only based on the best cue, and, in the end, use an examplar-based strategy. For a forward simulation of the computational models, see Figure \ref{fig:Figure2}D.
+
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{\input{figures/figure3.pgf}}
+\caption{Representational Analyses. \textbf{A)} Predictive accuracy of computational models trained with different latent representations. \textbf{B)} Predictive accuracy of computational models trained with pixel-based representations and the original latent dimensions. \textbf{C)} Performance of computational models trained with pixel-based representations, where models follow a greedy policy. \textbf{D)} Standardised coefficients with standard error bars from the mixed-effects logistic regression model predicting participant choice with reward estimates obtained by the linear model trained with pixel-based representations and those obtained by the same model trained on the latent dimensions. \vspace{-0.5cm}}
+\label{fig:Figure3}
+\end{figure*}
+
+\subsection{Interim Discussion}
+
+How do these results relate to the outcomes of previous decision-making studies with low-dimensional, artificial stimuli? An almost universal conclusion from these studies is that people seem to employ linear-additive strategies unless they are explicitly encouraged to use simpler decision-making heuristics instead \citep{binz_heuristics_2022}. This finding aligns with our main result that people are overall best described by the linear model.
+
+\citet{rieskamp2006ssl} furthermore found that participants in their study had initial preferences for linear-additive strategies, but then switched to single cue heuristics during later stages. This hypothesis was confirmed in several other studies \citep{gluck2002people, mata2007aging}. We observed an analogous pattern in our study, with participants having an initial preference for linear-additive strategies, followed by a switch to single cue heuristics.
+
+Finally, \citet{juslin2003exemplar} argued that \say{people have an inclination to abstract explicit representations whenever possible ..., with exemplar memory acting as a backup in tasks in which explicit representations of cue–criterion relations cannot be abstracted or in which behaviour has become automatic}. It would be plausible that behaviour has become automatic by the end of our study, which would, in turn, explain the late emergence of GPs (an exemplar-based model) as the winning hypothesis. Taking everything into consideration, our analysis suggests that key results from decision-making studies with low-dimensional, artificial stimuli also transfer to more naturalistic settings. 
+
+\section{Representational Analyses}
+
+In the above section, we used the latent dimensions extracted by \citet{hebart_revealing_2020} to train our computational models. However, these are not the only representations that can be used to solve our task. Humans may use more granular or more compressed representations. In addition to testing the dimensionality of the representations, we tested if our models can be improved by incorporating pixel-based representations extracted from convolutional neural networks.
+
+\subsection{Learning with Different Latent Dimensions}
+
+We re-trained the model of \citet{hebart_revealing_2020} to extract a different number of latent dimensions. The model is trained to predict human responses on an odd-one-out task with three objects. It learns weights shared across all the objects. The model is penalised for the number of non-zero weights that it learns, and the extent of this penalty is controlled by a hyperparameter in the model's loss function. By changing this hyperparameter, we extracted a low ($14$) and a high ($82$) number of latent dimensions from the objects. The test accuracy for the newly trained models on the odd-one-out task was comparable to that of the original model, indicating that the latent dimensions described the objects well. We then replicated the previously discussed model comparison procedure with the newly-extracted latent dimensions to test which representations predict human choice behaviour the best.
+
+For the models that were trained with low number of latent dimensions, the GP regression model performed the best (MF $= .58,$ XP $=.90, \: R^2 = .27$), followed closely by the linear model ($ R^2 = .27$). The single cue and equal weighting models again performed worse comparably ($R^2 = .12$ and $R^2 = .02$ respectively). Out of the models that were trained with the high number of latent dimensions, the linear model performed the best (MF $= .49$, XP $=.50, \: R^2 = .28$), with the GP regression model again performing similarly ($ R^2 = .28$). Both the single cue and equal weighting models predicted around chance level ($R^2 < .001$). Overall, the best performing model was the linear model trained with the original latent dimensions, indicating that the original dimensions extracted by Hebart and colleagues captured the representations used by participants to complete the task best (Figure \ref{fig:Figure3}A). Another interesting finding here is that the single cue model got better at predicting participant behaviour as the feature space got more compressed, hinting at the possibility that a sufficiently small feature space combined with this model may be able to compete with our currently winning models.
+
+\subsection{Learning with Pixel-Based Representations}
+
+There has been a recent surge of interest in using end-to-end representations to model human behaviour (see \citet{battleday_convolutional_2021} for a review). Following this direction, we consider if participants use such representations to solve our task. Convolutional neural networks have proven to be promising models of the human visual system \citep{yamins_using_2016}, and using representations of pretrained convolutional neural networks to model higher level cognitive tasks, like categorisation judgement \citep{battleday_capturing_2020}, has been successful. Therefore we decided to use such a neural network to obtain pixel-based representations. We passed the images through a pre-trained ResNet18 \citep{he_deep_2016} and extracted the activity pattern of the penultimate layer's neurons. We trained our models with the resulting $512$ features.
+
+Models trained with the pixel-based representations can perform the task above chance level as shown in Figure \ref{fig:Figure3}C. The linear model predicted human choice behaviour the best compared to the other pixel-based models (MF $= .97$, XP $>.99, \:R^2=.17$), which is however worse than the linear model trained with the original latent dimensions. All other models trained with pixel-based representations performed around chance level ($R^2 < .01$) (Figure \ref{fig:Figure3}B). 
+
+
+Even though the pixel-based computational models did not outperform the models trained with the original latent dimensions, it is possible that the reward estimates obtained by training on the pixel-based representations capture some features of the objects that were used by the participants but that were not captured by the original latent dimensions. To test this hypothesis, we used a  mixed-effects logistic regression model, where we used reward estimates of the linear model trained with the original latent dimensions and reward estimates of the linear model trained with pixel-based representations as predictors. The estimates obtained from both the original dimensions ($\hat{\beta} = 1.55$, $95 \% \text{ CI} \:[1.37, \: 1.73]$, $p < .001$) and the pixel-based representations ($\hat{\beta} = .27$, $95 \% \text{ CI} \: [.21, \: .33]$, $p < .001$) were significant predictors (Figure \ref{fig:Figure3}D). The model using both of the representations was significantly better in predicting human choice behaviour compared to the mixed-effects model that only used the linear model's estimates coming from the original latent dimensions ($\chi(3) = 17.9, \: p<.001, \: R^2 = .28$). These results provide support for our hypothesis that humans may use representations that are not captured by the symbolic feature space of latent dimensions but can be extracted using end-to-end methods.  
+
+\section{General Discussion}
+
+% task and can people solve it
+How do people learn to make good decisions in settings with high-dimensional options? We have studied this question in a two-alternative forced-choice task with naturalistic stimuli. Participants in our study were not explicitly instructed about the existence of the high-dimensional features of objects but nevertheless got better at the task quickly over time simply by reward guidance. The fact that none of the stimuli appear more than once also shows that participants did not simply learn stimulus-reward associations but that they learned features about the stimuli, allowing them to generalise.
+
+% model comparison result
+We furthermore tested various models used in the decision-making literature to provide a computational explanation of human generalisation in high-dimensional feature spaces. When trained on the latent dimensions extracted from similarity ratings that human participants performed on the stimuli, a linear model provided the best fit to the human data. Interestingly, however, comparing models at different points in the experiment revealed that participants changed their strategy as they progressed through the task. Participants initially learned a linear function until they were certain about which aspect was relevant for obtaining rewards and switched to a strategy that only cares about the single reward-relevant dimension once they were certain. In the later stages of the experiment, they switched to a GP regression model, suggesting that their behaviour has become automated.
+
+% representations
+While our models could predict participant behaviour, the features they received do not necessarily reflect the representations used by the participant. To investigate the possibility that humans use different representations while doing our task, we first compared models trained on the original latent dimensions with more compressed and more granular latent dimensions. We showed that the original latent dimensions that capture the structure of the task provided the best fit to the human choice data. It is worth pointing out that using more compressed dimensions led the single cue model to perform better compared to the other conditions. This is interesting because the individual cues this model uses to make decisions do not directly correspond to the reward function of our task. It is possible that humans represent the objects with even fewer dimensions than we have tested here and that a single cue model trained with more compressed representations can explain human choice behaviour even better.  
+
+% representations
+While the cognitive sciences have mostly used symbolic representations to model human behaviour, more recent work has shown that using distributed representations obtained by deep neural networks trained on naturalistic stimuli can provide a better account of human behaviour in similarity judgement \citep{peterson_evaluating_2018} and categorisation tasks \citep{battleday_capturing_2020}. To test if such representations can be useful in explaining human behaviour in our task, we trained our models on pixel-based representations obtained from a pre-trained convolutional neural network. The linear model again provided the best fit for the human data with this form of representation. Interestingly, reward estimates obtained from this linear model were better at predicting participants' choice when combined with the reward estimates coming from the linear model trained on the original latent dimensions, compared to using the reward estimates coming from the latter alone. In the future, trying different fine-tuned neural networks architectures for the task at hand can extend our work and provide better predictions of human behaviour. In addition to obtaining representations from neural networks, building neural networks that can also perform these decision-making tasks can help us understand the underlying neuronal processes when combined with neuroimaging.
+
+
+% future work
+Lastly, participants receive reward information of both the chosen and unchosen options in our task. We have made this choice to simplify our experimental design. However, this decision also removed the need for exploratory choices. Future work could lift this restriction and reveal reward information for only the chosen option. In turn, this will allow us to adapt our paradigm to study the relationship between exploration and generalisation \citep{wu_generalization_2018} in a more naturalistic setting. Lastly, our task was naturalistic only in the sense that it used rich and naturalistic feature spaces. Other aspects of naturalistic decision-making such as being faced with sparse rewards, having to define rewards internally, and dealing with high degrees of freedom need to be studied to understand how humans make decisions in the wild.
+
+% conclusion
+In summary, our work provides three important insights into human decision-making. First, we established that people learn to pick more rewarding options by generalising their knowledge about object features in a naturalistic setting. Second, we showed that humans employ different strategies at different stages and that their behaviour can be explained by similar models utilised in decision-making tasks with low-dimensional, artificial stimuli. Lastly, distributed representations obtained from neural networks capture aspects of how humans represented the objects in our task that were not captured by the original latent dimensions. These results offer some of the first insights into how people make decisions with naturalistic options.
+
+
+\section{Acknowledgements}
+
+We thank Martin Hebart for providing the training data for the embedding model in order to extract new latent dimensions. Code and anonymised data for this study are available at \url{https://github.com/candemircan/THINGSDecisions}
+
+\bibliographystyle{apacite}
+\setlength{\bibleftmargin}{.125in}
+\setlength{\bibindent}{-\bibleftmargin}
+
+\bibliography{refs}
+
+
+\end{document}
+
+

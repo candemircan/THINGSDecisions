@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from helpers import load_data
 from learners import *
@@ -27,3 +28,7 @@ if __name__ == "__main__":
         feature_loss = pd.read_csv(f'results/loo_{feature}.csv')
         model_frequency(feature_loss,f'results/frequency_{feature}.csv')
         r_squared(feature_loss,const,f'results/r2_{feature}.csv')
+
+    # plot results
+    os.system("python src/Py/plots.py")
+    os.system("python src/Py/supp_plots.py")

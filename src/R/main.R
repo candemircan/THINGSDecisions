@@ -30,4 +30,6 @@ for (feature in features){
     loo_cv(df_feature, path)
 }
 
-predict_resnet_linear(models_df,'results/resnet_linear_to_choice.csv')
+predict_resnet_linear(models_df,
+                      'results/resnet_linear_to_choice.csv',
+                      'results/resnet_original_compare.csv')

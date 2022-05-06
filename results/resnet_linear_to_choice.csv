@@ -1,0 +1,6 @@
+,effect,group,term,estimate,std.error,statistic,p.value
+1,fixed,NA,original_rl_diff,1.54813596309746,0.180983575534316,8.55401358121541,1.18880911901805E-17
+2,fixed,NA,value_rl_diff,0.265885482434039,0.0635897944195569,4.18126029280363,2.89897765733225E-05
+3,ran_pars,participant_n,sd__original_rl_diff,0.818950277183023,NA,NA,NA
+4,ran_pars,participant_n,cor__original_rl_diff.value_rl_diff,0.999975190978949,NA,NA,NA
+5,ran_pars,participant_n,sd__value_rl_diff,0.0182984203618351,NA,NA,NA
