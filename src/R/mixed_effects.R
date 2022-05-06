@@ -47,22 +47,21 @@ predict_trial_feature <- function(df,path,remake=FALSE){
     write.csv(trial_feature_df,path)
 }
 
-predict_resnet_linear <- function(df,path,remake=FALSE){
+predict_resnet_linear <- function(df,path_mixed, path_anova, remake=FALSE){
 
-    if (file.exists(path) && remake==FALSE){
+    if (file.exists(path_mixed) && remake==FALSE){
         return()
         }
 
     resnet_df <- df %>% filter(features=='resnet')
     original_df <- df %>% filter(features=='original')
-    resnet_df$original_rl_diff <- original_df$value_rl_diff
 
-    resnet_df$value_rl_diff <- scale(resnet_df$value_rl_diff)
-    resnet_df$original_rl_diff <- scale(resnet_df$original_rl_diff)
+    resnet_df$value_rl_diff <- scale(resnet_df$value_rl_diff)[,1]
+    resnet_df$original_rl_diff <- scale(original_df$value_rl_diff)[,1]
 
     # using value estimates of the linear model trained with original features
     null_model <- glmer(
-        rightChoice ~-1+original_rl_diff + (-1 + original_rl_diff | participant_n),
+        rightChoice ~-1 + original_rl_diff + (-1 + original_rl_diff | participant_n),
         family="binomial",data=resnet_df)
 
     # null model + value estimates of linear model using resnet features
@@ -71,8 +70,10 @@ predict_resnet_linear <- function(df,path,remake=FALSE){
         family="binomial",data=resnet_df)
 
 
-    resnet_feature_df <- tidy(anova(null_model,resnet_model))
-    write.csv(resnet_feature_df,path)
+    resnet_feature_compare <- tidy(anova(null_model,resnet_model))
+    resnet_feature_df <- tidy(resnet_model)
+    write.csv(resnet_feature_df,path_mixed)
+    write.csv(resnet_feature_compare,path_anova)
 
 
 
@@ -117,7 +118,7 @@ loo_cv <-function(df,path,remake=FALSE){
   loss <- as.data.frame(loss)
   colnames(loss) <- learners
   loss$p <- rep(1:par_no, times=1, each=trial_no)
-  write.csv(loss, f_name ,row.names = FALSE)
+  write.csv(loss, path ,row.names = FALSE)
 
 
 }
