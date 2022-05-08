@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import matplotlib.patheffects as pe
 from matplotlib.lines import Line2D
 import seaborn as sns
 
@@ -125,7 +126,7 @@ trial_feature_df = pd.read_csv('../../results/feature_trial_to_choice.csv')
 trial_feature_df = trial_feature_df[trial_feature_df['effect']=='fixed']
 trial_feature_df = trial_feature_df.replace(['RewardDiffRightLeft', 'trial_n', 'RewardDiffRightLeft:trial_n'],
                                             ['Reward Difference', 'Trial', 'Reward Difference x Trial'])
-axs1[3].bar(trial_feature_df['term'],trial_feature_df['estimate'],color=cmap[4])
+axs1[3].bar(trial_feature_df['term'],trial_feature_df['estimate'],color=cmap[4],edgecolor="black")
 axs1[3].set_ylabel(r'$\hat{\beta}$',rotation=0,labelpad=10)
 axs1[3].set_xticklabels(['Reward \nDifference','Trial','Reward \nDifference x Trial'])
 axs1[3].set_ylim(ymin=0)
@@ -192,7 +193,7 @@ model_freq_df['low'] = model_freq_df['mean'] - model_freq_df['var']
 model_freq_df['high'] = model_freq_df['mean'] + model_freq_df['var']
 
 sns.barplot(data=model_freq_df, x='model', y='mean',
-            hue='model', ax=axs2[1], dodge=False)
+            hue='model', ax=axs2[1], dodge=False, edgecolor="black")
 axs2[1].legend([], [], frameon=False)
 axs2[1].set(ylabel=r'Model Frequency',xlabel='Agent')
 
@@ -217,7 +218,7 @@ for cur_bin,trials in zip(range(1,4),binned_dfs.keys()):
 
 binned_main_df = pd.concat(binned_dfs.values())
 
-sns.barplot(data=binned_main_df, x='bin', y='mean', hue='model', ax=axs2[2])
+sns.barplot(data=binned_main_df, x='bin', y='mean', hue='model', ax=axs2[2], edgecolor="black")
 
 axs2[2].set(ylabel='Model Frequency',xlabel='Agent')
 axs2[2].set_xticklabels(['1-50','51-100','101-150'])
@@ -262,7 +263,7 @@ axs2[3].legend([], [], frameon=False)
 
 ### legend ###
 
-custom_legend_lines = [Line2D([0], [0], color=x, lw=15) for x in cmap]
+custom_legend_lines = [Line2D([0], [0], color=x, lw=15, path_effects=[pe.Stroke(linewidth=17, foreground='k'), pe.Normal()]) for x in cmap]
 fig2.legend(custom_legend_lines, ['Linear','Gaussian Process','Single Cue','Equal Weighting','Human'], loc=(.20,.87),ncol=5,frameon=False)
 
 
@@ -286,13 +287,13 @@ r2_14['dimensions'] = 'low'
 r2_82 = pd.read_csv('../../results/r2_82.csv')
 r2_82['dimensions'] = 'high'
 
-r2_allsize = pd.concat([r2_og,r2_14,r2_82],ignore_index=True)
+r2_allsize = pd.concat([r2_og,r2_14,r2_82])
 
 r2_allsize = pd.melt(r2_allsize,id_vars='dimensions',value_vars=['Linear','GP','SingleCue','EqualWeighting'])
 r2_allsize['agent'] = r2_allsize['variable']
 r2_allsize['r2'] = r2_allsize['value']
-sns.barplot(data=r2_allsize, x='dimensions', y='value',
-             hue='agent', ax=axs3[0],ci=None)
+sns.barplot(data=r2_allsize, x='dimensions', y='r2',
+             hue='agent', ax=axs3[0],ci=None, order=["low","original","high"], edgecolor="black")
 axs3[0].set(ylabel=r'Predictive Accuracy ($R^2$)')
 axs3[0].margins(y=0)
 axs3[0].set_xlabel('Dimensions')
@@ -310,7 +311,7 @@ og_vs_resnet = pd.melt(og_vs_resnet,id_vars='dimensions',value_vars=['Linear','G
 og_vs_resnet['agent'] = og_vs_resnet['variable']
 og_vs_resnet['r2'] = og_vs_resnet['value']
 sns.barplot(data=og_vs_resnet, x='dimensions', y='value',
-             hue='agent', ax=axs3[1],ci=None,dodge=True)
+             hue='agent', ax=axs3[1],ci=None,dodge=True, edgecolor="black")
 axs3[1].set(ylabel=r'Predictive Accuracy ($R^2$)')
 axs3[1].margins(y=0)
 axs3[1].set_xlabel('Dimensions')
@@ -354,7 +355,7 @@ resnet_feature_df = pd.read_csv('../../results/resnet_linear_to_choice.csv')
 resnet_feature_df = resnet_feature_df[resnet_feature_df['effect']=='fixed']
 resnet_feature_df = resnet_feature_df.replace(['original_rl_diff', 'value_rl_diff'],
                                             ['Latent Dimension \nValue Difference', 'Pixel Based \nValue Difference'])
-axs3[3].bar(resnet_feature_df['term'],resnet_feature_df['estimate'],color=cmap[4], width=.5)
+axs3[3].bar(resnet_feature_df['term'],resnet_feature_df['estimate'],color=cmap[4], width=.5, edgecolor="black")
 axs3[3].set_ylabel(r'$\hat{\beta}$',rotation=0,labelpad=10)
 
 
@@ -384,7 +385,7 @@ axs3[3].text(-0.1, 1.1, string.ascii_uppercase[3], transform=axs3[3].transAxes,
                   size=s_font_size, weight='bold')
 
 ### legend ###
-custom_legend_lines = [Line2D([0], [0], color=x, lw=15) for x in cmap]
+custom_legend_lines = [Line2D([0], [0], color=x, lw=15, path_effects=[pe.Stroke(linewidth=17, foreground='k'), pe.Normal()]) for x in cmap]
 fig3.legend(custom_legend_lines, ['Linear','Gaussian Process','Single Cue','Equal Weighting','Human'], loc=(.20,.87),ncol=5,frameon=False)
 
 plt.savefig('../../doc/figures/figure3.pgf',bbox_inches='tight')

@@ -3,6 +3,6 @@
 .Rhistory
 .DS_Store
 .Rproj.user
-__pycache__/
+**/__pycache__/
 stimuli/*
 !stimuli/.gitkeep
