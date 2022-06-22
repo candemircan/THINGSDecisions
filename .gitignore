@@ -7,3 +7,4 @@
 stimuli/*
 !stimuli/.gitkeep
 !stimuli/README.md
+src/Py/PlotsCogSciPresentation.ipynb
